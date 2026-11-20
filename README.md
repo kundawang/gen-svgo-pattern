@@ -54,6 +54,52 @@ type Pattern interface {
 }
 ```
 
+## Transforming a pattern
+
+The same pattern can look different across packagings without regenerating
+code. Each generated type exposes a transform value type and a
+`SetTileTransform` method. The transform is applied to the **tiling unit
+inside the `<pattern>` element** (via an inner `<g transform>`), not to the
+final canvas, so the tile grid and its dimensions stay fixed while the motif
+inside every repeated unit is scaled, rotated and translated.
+
+```go
+p := NewJigsaw()
+
+// Denser tiling via a smaller motif, 45° rotation and a shift of the motif
+// inside each unit.
+err := p.SetTileTransform(JigsawTransform{
+	ScaleX:    0.5,
+	ScaleY:    0.5,
+	RotateDeg: 45,
+	TranslateX: 12,
+	TranslateY: -8,
+})
+if err != nil {
+	// One or more inputs were invalid; they were corrected to safe defaults
+	// and the pattern is still in a usable state.
+	log.Println(err)
+}
+```
+
+Validation rules:
+
+- `ScaleX`/`ScaleY` must be finite and non-zero. Zero, `NaN` or infinite
+  values are reset to `1` and reported in the returned error.
+- `RotateDeg` (degrees about the unit origin) and the translations must be
+  finite; `NaN`/infinite values are reset to `0`.
+- The default constructor uses the identity transform, in which case no
+  transform group is emitted and the rendered SVG is identical to the
+  pre-transform output.
+
+`WriteSvgCode` now returns an error instead of silently producing broken or
+mis-sized code for: nil input or output, negative dimensions, dimensions that
+cannot be resolved from the SVG attributes or `viewBox`, SVGs without any
+paths or groups, and generated source that is not valid Go. Repeated group
+IDs are automatically suffixed (`dup`, `dup-2`, `dup-3`) so the generated
+document never defines the same id twice, and attribute values containing
+quotes are Go-escaped.
+
 Sample of the generated Go code:
 
 ```go

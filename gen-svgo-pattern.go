@@ -90,8 +90,19 @@ func main() {
 
 	fmt.Printf("Generating Go type %s...\n", typeName)
 
-	generator := generator.NewGenerator(packageName, tab, typeName, width, height)
-	generator.WriteSvgCode(svgFile, outFile)
+	gen := generator.NewGenerator(packageName, tab, typeName, width, height)
+	if err := gen.WriteSvgCode(svgFile, outFile); err != nil {
+		fmt.Println("Could not generate Go code: " + err.Error())
+		outFile.Close()
+		os.Remove(outPath)
+		os.Exit(1)
+		return
+	}
+	if err := outFile.Close(); err != nil {
+		fmt.Println("Could not close Go file: " + err.Error())
+		os.Exit(1)
+		return
+	}
 
 	fmt.Printf("Wrote %s\n", outPath)
 }

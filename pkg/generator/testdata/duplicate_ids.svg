@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80">
+  <g id="dup">
+    <path d="M0 0h10v10H0z"/>
+  </g>
+  <g id="dup">
+    <path d="M20 20h10v10H20z"/>
+    <g id="dup">
+      <path d="M30 30h5v5H30z"/>
+    </g>
+  </g>
+</svg>

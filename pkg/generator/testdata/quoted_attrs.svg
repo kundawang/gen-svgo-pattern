@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <g id="has &quot;quotes&quot; &amp; angles" fill="url(&quot;gradient#1&quot;)">
+    <path d="M0 0L64 64"/>
+  </g>
+  <g id="id with &quot;double quotes&quot;">
+    <path d="M0 64L64 0"/>
+  </g>
+</svg>
